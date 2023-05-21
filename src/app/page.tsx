@@ -1,15 +1,31 @@
 'use client'
+import { CharacterCard, Pagination } from ' @/components'
 import { getCharacters } from ' @/services'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
+
+const DEFAULT_API_LIMIT = 20
 
 export default function Home() {
   const [characters, setCharacters] = useState([])
+  const [pages, setPages] = useState({ totalPages: 0, actualPage: 0, totalCharacters: 0 })
+
+  const fetchCharacters = (offset?: number) => {
+    getCharacters(offset).then(data => {
+      setCharacters(data.results)
+      setPages({
+        totalPages: data.total / data.limit,
+        actualPage: data.offset / data.limit,
+        totalCharacters: data.total,
+      })
+    })
+  }
+
+  const handleSelectPage = (page: number) => {
+    fetchCharacters(page * DEFAULT_API_LIMIT)
+  }
 
   useEffect(() => {
-    getCharacters().then(res => {
-      setCharacters(res.data.results)
-    })
+    fetchCharacters()
   }, [])
 
   return (
@@ -21,38 +37,18 @@ export default function Home() {
           </h1>
 
           <p className='max-w-2xl mx-auto my-6 text-center text-gray-500 dark:text-gray-300'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo incidunt ex placeat modi magni quia error
-            alias, adipisci rem similique, at omnis eligendi optio eos harum.
+            Estos son los personajes de Marvel, selecciona tu favorito para ver sus detalles
           </p>
 
-          <div className='grid grid-cols-1 gap-8 mt-8 xl:mt-16 md:grid-cols-2 xl:grid-cols-3'>
+          <div className='grid grid-cols-1 gap-8 mt-8 xl:mt-16 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5'>
             {characters.map(
               (character: { name: string; thumbnail: { path: string; extension: string }; id: string }) => (
-                <div key={character.name + character.id} className='flex flex-col items-center'>
-                  <Image
-                    className='object-cover w-full rounded-xl aspect-square top-0'
-                    src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-                    alt={`Imagen de ${character.name}`}
-                    loading={'lazy'}
-                    onLoad={() => (
-                      <div
-                        className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'
-                        role='status'
-                      >
-                        <span className='!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]'>
-                          Loading...
-                        </span>
-                      </div>
-                    )}
-                    width={400}
-                    height={400}
-                  />
-
-                  <h2 className='mt-4 text-2xl font-semibold text-gray-700 capitalize dark:text-white'>{`${character.name}`}</h2>
-                </div>
+                <CharacterCard key={character.name + character.id} {...character} />
               )
             )}
           </div>
+
+          <Pagination {...pages} onSelectPage={handleSelectPage} />
         </div>
       </section>
     </main>
