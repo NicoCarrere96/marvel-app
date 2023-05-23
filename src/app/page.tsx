@@ -1,32 +1,26 @@
-'use client'
 import { CharacterCard, Pagination } from ' @/components'
+import { Character } from ' @/model'
 import { getCharacters } from ' @/services'
-import { useEffect, useState } from 'react'
 
-const DEFAULT_API_LIMIT = 20
+type HomeSearchParams = {
+  name?: string
+  offset?: number
+}
 
-export default function Home() {
-  const [characters, setCharacters] = useState([])
-  const [pages, setPages] = useState({ totalPages: 0, actualPage: 0, totalCharacters: 0 })
+async function fetchCharacters({ offset, name }: HomeSearchParams) {
+  const data = await getCharacters({ offset, name })
 
-  const fetchCharacters = (offset?: number) => {
-    getCharacters(offset).then(data => {
-      setCharacters(data.results)
-      setPages({
-        totalPages: data.total / data.limit,
-        actualPage: data.offset / data.limit,
-        totalCharacters: data.total,
-      })
-    })
+  return {
+    characters: data.results,
+    pages: {
+      totalPages: Math.ceil(data.total / data.limit),
+      actualPage: data.offset / data.limit + 1,
+    },
   }
+}
 
-  const handleSelectPage = (page: number) => {
-    fetchCharacters(page * DEFAULT_API_LIMIT)
-  }
-
-  useEffect(() => {
-    fetchCharacters()
-  }, [])
+export const Home = async ({ searchParams }: { searchParams: HomeSearchParams }) => {
+  const { characters, pages } = await fetchCharacters(searchParams)
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-between p-24'>
@@ -40,17 +34,17 @@ export default function Home() {
             Estos son los personajes de Marvel, selecciona tu favorito para ver sus detalles
           </p>
 
-          <div className='grid grid-cols-1 gap-8 mt-8 xl:mt-16 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5'>
-            {characters.map(
-              (character: { name: string; thumbnail: { path: string; extension: string }; id: string }) => (
-                <CharacterCard key={character.name + character.id} {...character} />
-              )
-            )}
+          <div className='grid grid-cols-1 gap-8 mt-8 xl:mt-16 sm:grid-cols-2 lg:grid-cols-4'>
+            {characters.map((character: Character) => (
+              <CharacterCard key={character.name + character.id} {...character} />
+            ))}
           </div>
 
-          <Pagination {...pages} onSelectPage={handleSelectPage} />
+          <Pagination {...pages} />
         </div>
       </section>
     </main>
   )
 }
+
+export default Home

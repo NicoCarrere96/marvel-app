@@ -1,14 +1,8 @@
+import { Character } from ' @/model'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const CharacterCard = ({
-  name,
-  thumbnail,
-}: {
-  name: string
-  thumbnail: { path: string; extension: string }
-  id: string
-}) => {
+const CharacterCard = ({ name, thumbnail }: Character) => {
   return (
     <Link href={''} className='flex flex-col items-center transition-transform hover:scale-110'>
       <Image
