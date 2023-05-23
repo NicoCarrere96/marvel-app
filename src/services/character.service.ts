@@ -1,12 +1,21 @@
-const API_TS = process.env.NEXT_PUBLIC_MARVEL_API_TS
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY_MARVEL
-const API_HASH = process.env.NEXT_PUBLIC_API_HASH_KEY_MARVEL
+import { CharacterResponse } from ' @/model'
 
-export const getCharacters = async (offset?: number) => {
+const apiTs = process.env.NEXT_PUBLIC_MARVEL_API_TS
+const apiKey = process.env.NEXT_PUBLIC_API_KEY_MARVEL
+const apiHash = process.env.NEXT_PUBLIC_API_HASH_KEY_MARVEL
+
+export const getCharacters = async ({
+  offset,
+  name,
+}: {
+  offset?: number
+  name?: string
+}): Promise<CharacterResponse> => {
+  const nameQuery = name ? `&nameStartsWith=${name}` : ''
+  const offsetQuery = offset ? `&offset=${offset}` : ''
+
   return await fetch(
-    `http://gateway.marvel.com/v1/public/characters?ts=${API_TS}&apikey=${API_KEY}&hash=${API_HASH}${
-      offset ? `&offset=${offset}` : ''
-    }`
+    `http://gateway.marvel.com/v1/public/characters?ts=${apiTs}&apikey=${apiKey}&hash=${apiHash}${offsetQuery}${nameQuery}`
   )
     .then(response => response.json())
     .then(response => response.data)
