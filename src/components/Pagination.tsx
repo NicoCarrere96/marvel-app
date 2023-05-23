@@ -4,13 +4,12 @@ import { useRouter, useSearchParams } from 'next/navigation'
 type PaginationProps = {
   totalPages: number
   actualPage: number
-  totalCharacters: number
 }
 
 const DEFAULT_API_LIMIT = 20
 const PAGE_RANGE = 3
 
-const Pagination = ({ totalPages, actualPage, totalCharacters }: PaginationProps) => {
+const Pagination = ({ totalPages, actualPage }: PaginationProps) => {
   const { push } = useRouter()
   const searchParams = useSearchParams()
 
@@ -29,8 +28,8 @@ const Pagination = ({ totalPages, actualPage, totalCharacters }: PaginationProps
         <div className='flex'>
           {actualPage !== startPage && (
             <button
-              onClick={() => handleChangePage(--actualPage)}
-              className='flex items-center justify-center px-4 py-2 mx-1 transition-colors duration-300 cursor-not-allowed transform rounded-md rtl:-scale-x-100 bg-gray-800 text-gray-200 hover:bg-blue-500 hover:text-gray-200'
+              onClick={() => handleChangePage(actualPage - 2)}
+              className='flex items-center justify-center px-4 py-2 mx-1 transition-colors duration-300 transform rounded-md rtl:-scale-x-100 bg-gray-800 text-gray-200 hover:bg-blue-500 hover:text-gray-200'
             >
               <svg xmlns='http://www.w3.org/2000/svg' className='w-5 h-5' viewBox='0 0 20 20' fill='currentColor'>
                 <path
@@ -59,7 +58,7 @@ const Pagination = ({ totalPages, actualPage, totalCharacters }: PaginationProps
           {actualPage !== endPage && (
             <button
               disabled={actualPage === endPage}
-              onClick={() => handleChangePage(++actualPage)}
+              onClick={() => handleChangePage(actualPage)}
               className='flex items-center justify-center px-4 py-2 mx-1 transition-colors duration-300 transform rounded-md rtl:-scale-x-100 bg-gray-800 text-gray-200 hover:bg-blue-500 hover:text-gray-200'
             >
               <svg xmlns='http://www.w3.org/2000/svg' className='w-5 h-5' viewBox='0 0 20 20' fill='currentColor'>

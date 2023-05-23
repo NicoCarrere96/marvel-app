@@ -13,11 +13,8 @@ async function fetchCharacters({ offset, name }: HomeSearchParams) {
   return {
     characters: data.results,
     pages: {
-      limit: data.limit,
       totalPages: Math.ceil(data.total / data.limit),
       actualPage: data.offset / data.limit + 1,
-      totalCharacters: data.total,
-      count: data.count,
     },
   }
 }
@@ -37,7 +34,7 @@ export const Home = async ({ searchParams }: { searchParams: HomeSearchParams })
             Estos son los personajes de Marvel, selecciona tu favorito para ver sus detalles
           </p>
 
-          <div className='grid grid-cols-1 gap-8 mt-8 xl:mt-16 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5'>
+          <div className='grid grid-cols-1 gap-8 mt-8 xl:mt-16 sm:grid-cols-2 lg:grid-cols-4'>
             {characters.map((character: Character) => (
               <CharacterCard key={character.name + character.id} {...character} />
             ))}
