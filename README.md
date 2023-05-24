@@ -11,11 +11,11 @@ yarn install
 ```
 
 Debe agregarse un .env.local dentro del raiz del proyecto con los siguientes valores:
-
-- NEXT_PUBLIC_API_KEY_MARVEL: Debe ser la apiKey pública generada en [Marvel API](https://developer.marvel.com/)
-- NEXT_PUBLIC_API_HASH_KEY_MARVEL: Un resumen md5 del parámetro ts, su clave privada y su clave pública
-- NEXT_PUBLIC_MARVEL_API_TS: Esta es una marca de tiempo que debe utilizarse al momento de generar el hash
-
+```.env
+NEXT_PUBLIC_API_KEY_MARVEL: Debe ser la apiKey pública generada en [Marvel API](https://developer.marvel.com/)
+NEXT_PUBLIC_API_HASH_KEY_MARVEL: Un resumen md5 del parámetro ts, su clave privada y su clave pública
+NEXT_PUBLIC_MARVEL_API_TS: Esta es una marca de tiempo que debe utilizarse al momento de generar el hash
+```
 Para mas información consultar la [documentación de autorización](https://developer.marvel.com/documentation/authorization)
 
 ## Usage
